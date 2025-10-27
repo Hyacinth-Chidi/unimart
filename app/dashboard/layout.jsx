@@ -16,9 +16,17 @@ export default function DashboardLayout({ children }) {
 
     const verifyAuth = async () => {
       try {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+        
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           credentials: 'include',
         });
 

@@ -54,30 +54,30 @@ export default function Login() {
     setApiError('');
     
     try {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // Send HTTP-only cookie
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          rememberMe: formData.rememberMe
-        })
-      });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        if (data.needsProfileCompletion) {
-          router.push(`/complete-profile?email=${encodeURIComponent(formData.email)}`);
-          return;
-        }
-        throw new Error(data.message || 'Login failed');
-      }
-      
-      // No token/user storage needed; cookie is set by backend
-      console.log('Login successful:', data.user);
-      router.push(data.user.isVendor ? '/dashboard' : '/vendor-dashboard');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include', // Send HTTP-only cookie
+            body: JSON.stringify({
+              email: formData.email,
+              password: formData.password,
+              rememberMe: formData.rememberMe
+            })
+          });
+          
+          const data = await response.json();
+          
+          if (!response.ok) {
+            if (data.needsProfileCompletion) {
+              router.push(`/complete-profile?email=${encodeURIComponent(formData.email)}`);
+              return;
+            }
+            throw new Error(data.message || 'Login failed');
+          }
+          
+          // No token/user storage needed; cookie is set by backend
+          console.log('Login successful:', data.user);
+          router.push(data.user.isVendor ? '/dashboard' : '/vendor-dashboard');
       
     } catch (error) {
       setApiError(error.message);
