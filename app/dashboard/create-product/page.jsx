@@ -115,7 +115,7 @@ export default function CreateProduct() {
     setSuccess('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/products/create', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Send HTTP-only cookie

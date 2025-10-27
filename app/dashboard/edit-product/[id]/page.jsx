@@ -70,7 +70,7 @@ export default function EditProduct() {
       }
 
       try {
-        const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -246,7 +246,7 @@ export default function EditProduct() {
         updateData.existingImages = existingImages; // Preserve existing
       }
 
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
@@ -267,7 +267,7 @@ export default function EditProduct() {
       // Refetch product to get updated images
       setUpdatingImages(true);
       try {
-        const refetchResponse = await fetch(`http://localhost:5000/api/products/${productId}`, {
+  const refetchResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${productId}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',

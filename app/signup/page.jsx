@@ -118,7 +118,7 @@ export default function SignUp() {
     setApiError('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/signup', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Send HTTP-only cookie
@@ -155,7 +155,7 @@ export default function SignUp() {
     setApiError('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/complete-profile', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/complete-profile`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Send HTTP-only cookie
@@ -188,7 +188,7 @@ export default function SignUp() {
   };
 
   const handleGoogleSignUp = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`;
   };
 
   return (

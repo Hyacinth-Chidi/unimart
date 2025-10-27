@@ -38,7 +38,7 @@ function ProductGallery() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/products");
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
         if (!response.ok) throw new Error(`HTTP error! ${response.status}`);
 
         const data = await response.json();

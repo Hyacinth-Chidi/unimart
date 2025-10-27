@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }) {
 
     const verifyAuth = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/auth/me', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
@@ -58,7 +58,7 @@ export default function DashboardLayout({ children }) {
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:5000/api/auth/logout', {
+  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
       });

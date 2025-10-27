@@ -54,7 +54,7 @@ export default function Login() {
     setApiError('');
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Send HTTP-only cookie
@@ -87,7 +87,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'http://localhost:5000/api/auth/google';
+  window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`;
   };
 
   return (
