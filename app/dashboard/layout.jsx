@@ -8,56 +8,49 @@ import { useRouter } from 'next/navigation';
 export default function DashboardLayout({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [authChecked, setAuthChecked] = useState(false); // Prevent loop
+  const [authChecked, setAuthChecked] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (authChecked) return; // Skip if already checked
+    if (authChecked) return;
 
     const verifyAuth = async () => {
       try {
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        if (!token) {
-          throw new Error('No token found');
-        }
-        
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
           method: 'GET',
-          headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          credentials: 'include',
+          credentials: 'include', // Sends HttpOnly cookie
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message || `Fetch failed with status ${response.status}`);
+          throw new Error(data.message || 'Not authenticated');
         }
 
+        // Profile not complete → redirect
         if (!data.user.profileComplete) {
-          console.log('⚠️ Profile incomplete, redirecting to /complete-profile');
+          console.log('Profile incomplete, redirecting to /complete-profile');
           router.push('/complete-profile');
           return;
         }
 
+        // Not a vendor → redirect to buyer dashboard
         if (!data.user.isVendor) {
-          console.log('⚠️ Not a vendor, redirecting to /dashboard');
-          router.replace('/dashboard'); // Use replace to avoid history stack issues
+          console.log('Not a vendor, redirecting to /dashboard');
+          router.replace('/dashboard');
           return;
         }
 
-        console.log('✅ User authenticated:', data.user.email);
+        console.log('User authenticated:', data.user.email);
         console.log('   School:', data.user.school);
         setUser(data.user);
 
       } catch (error) {
-        console.error('Auth error:', error.message, { status: error.status });
-        router.replace('/login'); // Use replace to avoid loop
+        console.error('Auth error:', error.message);
+        router.replace('/login');
       } finally {
         setLoading(false);
-        setAuthChecked(true); // Mark auth as checked
+        setAuthChecked(true);
       }
     };
 
@@ -66,13 +59,13 @@ export default function DashboardLayout({ children }) {
 
   const handleLogout = async () => {
     try {
-  await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
+      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
       });
-      router.push('/login');
     } catch (error) {
       console.error('Logout error:', error);
+    } finally {
       router.push('/login');
     }
   };
@@ -96,11 +89,12 @@ export default function DashboardLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Desktop Sidebar */}
       <aside className="fixed left-0 top-0 w-64 h-screen bg-card border-r border-border hidden md:flex flex-col">
         <div className="p-6 border-b border-border">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">🛒</span>
+              <span className="text-primary-foreground font-bold">Shopping Cart</span>
             </div>
             <span className="font-bold text-lg text-foreground">UniMart</span>
           </Link>
@@ -139,11 +133,12 @@ export default function DashboardLayout({ children }) {
         </div>
       </aside>
 
+      {/* Mobile Header */}
       <header className="md:hidden bg-card border-b border-border sticky top-0 z-30">
         <div className="flex items-center justify-between p-4">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">🛒</span>
+              <span className="text-primary-foreground font-bold">Shopping Cart</span>
             </div>
             <span className="font-bold text-lg text-foreground">UniMart</span>
           </Link>
@@ -162,7 +157,6 @@ export default function DashboardLayout({ children }) {
     </div>
   );
 }
-
 
 
 
