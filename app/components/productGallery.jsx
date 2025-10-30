@@ -121,7 +121,7 @@ function ProductGallery() {
   // Loading Skeleton
   if (loading) {
     return (
-      <div className="w-full max-w-7xl mx-auto pb-16 px-4">
+      <div className="w-full max-w-7xl mx-auto   pb-16 px-4">
         <div className="text-center mb-8">
           <div className="h-8 bg-muted rounded w-64 mx-auto mb-4 animate-pulse"></div>
           <div className="h-4 bg-muted rounded w-96 mx-auto animate-pulse"></div>
@@ -147,7 +147,7 @@ function ProductGallery() {
 
   if (featuredProducts.length === 0) {
     return (
-      <div className="w-full max-w-7xl mx-auto pb-16 px-4">
+      <div className="w-full max-w-7xl mx-auto mt-12 pb-16 px-4">
         <div className="bg-card border border-border rounded-2xl h-96 flex flex-col items-center justify-center text-center p-8">
           <div className="text-6xl mb-4">🎨</div>
           <h3 className="text-2xl font-bold text-foreground mb-2">No Featured Products</h3>
@@ -163,7 +163,7 @@ function ProductGallery() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto pb-16 px-4">
+    <div className="w-full max-w-7xl mt-12 mx-auto pb-16 px-4">
     
 
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
@@ -349,7 +349,7 @@ function ProductGallery() {
 
         {/* Enhanced Product Details Section */}
         {selectedProduct && (
-          <div className="bg-card border border-border rounded-2xl p-6 flex flex-col h-full">
+          <div className="hidden sm:block bg-card border border-border rounded-2xl p-6 flex flex-col h-full">
             {/* Header with Wishlist */}
             <div className="flex items-start justify-between mb-4">
               <Badge variant="secondary" className="text-sm">
@@ -474,7 +474,7 @@ function ProductGallery() {
               </Button>
             </div>
           </div>
-        )}
+        )}  
       </div>
 
       {/* Gallery Stats */}

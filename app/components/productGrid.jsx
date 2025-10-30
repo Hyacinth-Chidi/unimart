@@ -139,15 +139,13 @@ function ProductGrid() {
     return matchesSearch && matchesCategory;
   });
 
-  const handleBuyNow = (product) => {
-    if (product.vendor?.whatsappNumber) {
-      const message = `Hi, I'm interested in buying: *${product.name}* (₦${product.price.toLocaleString()})`;
-      const whatsappUrl = `https://wa.me/${product.vendor.whatsappNumber}?text=${encodeURIComponent(
-        message
-      )}`;
-      window.open(whatsappUrl, "_blank");
-    }
-  };
+const handleBuyNow = (product) => {
+  if (product.vendor?.whatsappNumber && product.image) {
+    const message = `Hi, I'm interested in buying:\n\n*${product.name}* (₦${product.price.toLocaleString()})\n${product.image}`;
+    const whatsappUrl = `https://wa.me/${product.vendor.whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  }
+};
 
   // Image navigation
   const nextImage = (e) => {
@@ -383,7 +381,7 @@ function ProductGrid() {
 
                     {/* Category badge */}
                     <div className="absolute bottom-3 left-3">
-                      <Badge variant="secondary" className="text-xs backdrop-blur-sm bg-white/90">
+                      <Badge  className="bg-white/20 backdrop-blur-sm text-white border-0">
                         {product.category}
                       </Badge>
                     </div>

@@ -7,16 +7,6 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background">
       <Header />
-      <div className="text-center mb-12">
-        <div className="flex items-center justify-center gap-2 mb-4 mt-4">
-          <h1 className="text-5xl font-bold text-primary">
-            Campus Marketplace
-          </h1>
-        </div>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Discover amazing products from fellow students. Shop smart, save big! 🎓
-        </p>
-      </div>
       <ProductGallery />
       <ProductGrid />
 
