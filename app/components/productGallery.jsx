@@ -349,7 +349,7 @@ function ProductGallery() {
 
         {/* Enhanced Product Details Section */}
         {selectedProduct && (
-          <div className="hidden sm:block bg-card border border-border rounded-2xl p-6 flex flex-col h-full">
+          <div className="hidden sm:flex sm:flex-col bg-card border border-border rounded-2xl p-6 h-full">
             {/* Header with Wishlist */}
             <div className="flex items-start justify-between mb-4">
               <Badge variant="secondary" className="text-sm">
