@@ -135,23 +135,13 @@ const handleBuyNow = (product) => {
   // Prefer explicit WhatsApp number, but also accept other common phone fields
   const rawPhone = product?.vendor?.whatsappNumber || product?.vendor?.phone || product?.vendor?.contact;
 
-  // Build an image fallback: try `product.image`, then `product.mainImage`, then any validImages
-  const validImgs = getValidImages(product);
-  const imageUrl = product.image || product.mainImage || (validImgs.length > 0 ? validImgs[0].url : "");
-
   if (rawPhone) {
     // sanitize phone number to digits only (WhatsApp expects international format without +)
     const phone = String(rawPhone).replace(/[^0-9]/g, "");
 
-    const messageParts = [
-      `Hi, I'm interested in buying:`,
-      `*${product.name}* (₦${product.price?.toLocaleString ? product.price.toLocaleString() : product.price})`,
-    ];
-    if (imageUrl) messageParts.push(imageUrl);
-
-    const message = messageParts.join('\n\n');
+    // Only send a textual message (product name and price) — no images per request
+    const message = `Hi, I'm interested in buying:\n\n*${product.name}* (₦${product.price?.toLocaleString ? product.price.toLocaleString() : product.price})`;
     const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    // open in a new tab/window
     if (typeof window !== 'undefined') window.open(whatsappUrl, "_blank");
   } else {
     // Fallback UX when no phone is available
