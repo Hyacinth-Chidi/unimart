@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -20,6 +20,7 @@ import {
 const ProductModal = ({ 
   selectedProduct, 
   closeModal, 
+  onRequestClose,
   validImages, 
   currentImage, 
   currentImageIndex, 
@@ -36,25 +37,61 @@ const ProductModal = ({
 }) => {
   if (!selectedProduct) return null;
 
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    // trigger slide-up animation after mount
+    setIsVisible(true);
+    return () => setIsVisible(false);
+  }, []);
+
+  // Close with slide-down animation, then call parent close handler (if provided)
+  const handleClose = () => {
+    setIsVisible(false);
+    // wait for transition to finish (match duration-300)
+    setTimeout(() => {
+      // prefer onRequestClose if parent passed it, fall back to closeModal
+      if (typeof onRequestClose === 'function') {
+        onRequestClose();
+      } else if (typeof closeModal === 'function') {
+        closeModal();
+      }
+    }, 300);
+  };
+
+  // Close when overlay is clicked
+  const handleOverlayClick = () => {
+    handleClose();
+  };
+
+  // Close on Escape key
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
-      <div className="bg-card rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl animate-in zoom-in-95 duration-300">
+    <div onClick={handleOverlayClick} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end justify-center p-0">
+      <div onClick={(e) => e.stopPropagation()} className={`bg-card rounded-t-2xl w-full max-w-4xl max-h-[97vh] overflow-y-auto shadow-2xl transform transition-transform duration-300 ease-out ${isVisible ? 'translate-y-0' : 'translate-y-full'}`}>
         {/* Header with close button */}
         <div className="sticky top-0 bg-card border-b border-border p-6 rounded-t-2xl flex items-center justify-between">
           <h2 className="text-2xl font-bold text-foreground truncate">
             {selectedProduct.name}
           </h2>
           <button
-            onClick={closeModal}
+            onClick={handleClose}
             className="p-2 hover:bg-secondary rounded-lg transition hover:scale-110"
           >
             <X className="w-6 h-6" />
           </button>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 p-6">
+        <div className="flex flex-col md:flex-row gap-8 p-6">
           {/* Enhanced Image Carousel */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex-1">
             <div className="relative w-full h-80 bg-gradient-to-br from-secondary/30 to-muted/20 rounded-xl overflow-hidden">
               {validImages.length > 0 && currentImage ? (
                 <>
@@ -142,7 +179,7 @@ const ProductModal = ({
           </div>
 
           {/* Product Details */}
-          <div className="space-y-6">
+          <div className="space-y-6 flex-1">
             {/* Price & Category */}
             <div>
               <p className="text-2xl font-bold text-primary mb-2">
@@ -205,31 +242,38 @@ const ProductModal = ({
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
-              <button
-                onClick={() => toggleWishlist(selectedProduct.id)}
-                className={`flex-1 py-3 rounded-xl font-semibold transition-all duration-300 border-2 flex items-center justify-center gap-2 ${
-                  wishlist.includes(selectedProduct.id)
-                    ? 'bg-destructive/10 border-destructive text-destructive hover:bg-destructive/20'
-                    : 'bg-secondary/30 border-border text-foreground hover:bg-secondary/50 hover:scale-105'
-                }`}
-              >
-                <Heart
-                  className={`w-5 h-5 ${
-                    wishlist.includes(selectedProduct.id) ? 'fill-destructive' : ''
-                  }`}
-                />
-                {wishlist.includes(selectedProduct.id) ? 'Wishlisted' : 'Wishlist'}
-              </button>
+            {/* Future Reviews Section */}
+            <div className="h-32 flex items-center justify-center text-muted-foreground border-2 border-dashed rounded-xl mt-6">
+              <p>Reviews coming soon...</p>
+            </div>
 
-              <Button
-                onClick={() => handleBuyNow(selectedProduct)}
-                className="flex-1 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white font-semibold py-3 h-auto text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              >
-                <MessageCircle className="w-5 h-5 mr-2" />
-                Chat on WhatsApp
-              </Button>
+            {/* Sticky Action Buttons */}
+            <div className="sticky bottom-0 left-0 right-0 bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/80 border-t border-border mt-6 py-4 px-6 shadow-lg">
+              <div className="flex gap-3">
+                <button
+                  onClick={() => toggleWishlist(selectedProduct.id)}
+                  className={`flex-1 py-3 rounded-xl font-semibold transition-all duration-300 border-2 flex items-center justify-center gap-2 ${
+                    wishlist.includes(selectedProduct.id)
+                      ? 'bg-destructive/10 border-destructive text-destructive hover:bg-destructive/20'
+                      : 'bg-secondary/30 border-border text-foreground hover:bg-secondary/50 hover:scale-105'
+                  }`}
+                >
+                  <Heart
+                    className={`w-5 h-5 ${
+                      wishlist.includes(selectedProduct.id) ? 'fill-destructive' : ''
+                    }`}
+                  />
+                  {wishlist.includes(selectedProduct.id) ? 'Wishlisted' : 'Wishlist'}
+                </button>
+
+                <Button
+                  onClick={() => handleBuyNow(selectedProduct)}
+                  className="flex-1 bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white font-semibold py-3 h-auto text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                >
+                  <MessageCircle className="w-5 h-5 mr-2" />
+                  Chat on WhatsApp
+                </Button>
+              </div>
             </div>
           </div>
         </div>
